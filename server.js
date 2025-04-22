@@ -5,7 +5,7 @@ const fetch = require('node-fetch'); // Zorg ervoor dat node-fetch is geïnstall
 // Maak een Express-app
 const app = express();
 const PORT = process.env.PORT || 3000; // Gebruik de poort die Render biedt of standaard 3000
-
+console.log('Fetch gestart');
 // Endpoint om API-gegevens op te halen
 app.get('/api/wachttijden', async (req, res) => {
     const apiUrl = 'https://queue-times.com/parks/6/queue_times.json';
