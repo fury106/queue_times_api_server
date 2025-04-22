@@ -1,26 +1,31 @@
+// Importeer de benodigde modules
 const express = require('express');
 const fetch = require('node-fetch');
-const cors = require('cors'); // Importeer het cors-pakket
+const cors = require('cors'); // Voor CORS-ondersteuning
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Gebruik CORS en sta verzoeken toe van je frontend
+// Gebruik CORS
 app.use(cors({
-    origin: 'https://fury106.github.io', // Specificeer de toegestane origin
+    origin: 'https://fury106.github.io', // Sta verzoeken toe van jouw frontend
 }));
 
-// Endpoint om API-gegevens op te halen
-app.get('/api/wachttijden', async (req, res) => {
-    const apiUrl = 'https://queue-times.com/parks/6/queue_times.json';
+// Dynamisch endpoint voor wachttijden van meerdere parken
+app.get('/api/wachttijden/:parkId', async (req, res) => {
+    const { parkId } = req.params; // Haal het park-id op uit de URL
+    const apiUrl = `https://queue-times.com/parks/${parkId}/queue_times.json`; // Dynamisch API-pad
 
     try {
+        // Haal gegevens op van de externe API
         const response = await fetch(apiUrl);
         if (!response.ok) {
             throw new Error('Probleem bij het ophalen van de data');
         }
+
+        // Parse de gegevens naar JSON
         const data = await response.json();
-        res.json(data);
+        res.json(data); // Stuur de gegevens door naar de frontend
     } catch (error) {
         console.error('Fout bij het ophalen van de API:', error.message);
         res.status(500).json({
